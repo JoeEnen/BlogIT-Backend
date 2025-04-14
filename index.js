@@ -12,8 +12,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-//s/p
-
+// SIGNUP ROUTE
 app.post("/api/signup", async (req, res) => {
   const { firstName, lastName, email, username, password } = req.body;
 
@@ -25,10 +24,9 @@ app.post("/api/signup", async (req, res) => {
     });
 
     if (existingUser) {
-      return res
-        .status(400)
-        .json({ message: "Email or username already taken" });
+      return res.status(400).json({ message: "Email or username already taken" });
     }
+
     const hashedPassword = await bcrypt.hash(password, 10);
     await prisma.user.create({
       data: {
@@ -43,19 +41,11 @@ app.post("/api/signup", async (req, res) => {
     res.status(201).json({ message: "Account created successfully" });
   } catch (error) {
     console.error("Signup Error:", error);
-    res
-      .status(500)
-      .json({
-        message: "Internal server ran into a problem. Try again later.",
-      });
+    res.status(500).json({ message: "Internal server ran into a problem. Try again later." });
   }
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
-
-//log
-
+// LOGIN ROUTE
 app.post("/api/login", async (req, res) => {
   const { identifier, password } = req.body;
 
@@ -72,11 +62,13 @@ app.post("/api/login", async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: "Email or password wrong. Try again" });
     }
+
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(400).json({ message: "Email or password wrong. Try again" });
     }
-     const token = jwt.sign(
+
+    const token = jwt.sign(
       { userId: user.id, username: user.username },
       process.env.JWT_SECRET,
       { expiresIn: "2h" }
@@ -94,9 +86,11 @@ app.post("/api/login", async (req, res) => {
       }
     });
 
-
   } catch (error) {
     console.error("Login unsuccessful:", error);
     res.status(500).json({ message: "Something went wrong. Please try again after a while." });
   }
 });
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
