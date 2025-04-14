@@ -12,7 +12,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// SIGNUP ROUTE
+// s/p
 app.post("/api/signup", async (req, res) => {
   const { firstName, lastName, email, username, password } = req.body;
 
@@ -45,7 +45,7 @@ app.post("/api/signup", async (req, res) => {
   }
 });
 
-// LOGIN ROUTE
+// Log
 app.post("/api/login", async (req, res) => {
   const { identifier, password } = req.body;
 
