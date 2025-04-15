@@ -5,12 +5,24 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const app = express();
-app.use(cors());
+app.use(cors(
+  {
+origin: "https://blog-it-neon.vercel.app/",
+methods: ["POST", "GET", "PUT", "PATCH", "DELETE"],
+credentials: true,
+  }
+));
+
+
+
+
 app.use(express.json());
 
-// 👇 Dynamic import AFTER prisma generate
-let prisma;
 
+
+
+let prisma;
+ 
 (async () => {
   const { PrismaClient } = await import("@prisma/client");
   prisma = new PrismaClient();
@@ -90,6 +102,6 @@ let prisma;
   });
 
   const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 })();
 
