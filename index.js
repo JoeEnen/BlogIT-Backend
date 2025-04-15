@@ -7,7 +7,7 @@ require("dotenv").config();
 const app = express();
 app.use(cors(
   {
-origin: "https://blog-it-neon.vercel.app/",
+origin: "https://blog-it-neon.vercel.app",
 methods: ["POST", "GET", "PUT", "PATCH", "DELETE"],
 credentials: true,
   }
@@ -27,7 +27,7 @@ let prisma;
   const { PrismaClient } = await import("@prisma/client");
   prisma = new PrismaClient();
 
-  // ✅ Your routes go here
+ 
   app.post("/api/signup", async (req, res) => {
     const { firstName, lastName, email, username, password } = req.body;
 
