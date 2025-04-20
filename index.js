@@ -9,7 +9,7 @@ require("dotenv").config();
 const app = express();
 
 app.use(cors({
-  origin: ["http://localhost:5173", "https://blog-it-neon.vercel.app"],
+  origin: ["http://localhost:5173", "http://localhost:5174", "https://blog-it-neon.vercel.app"],
   methods: ["POST", "GET", "PUT", "PATCH", "DELETE"],
   credentials: true,
 }));
