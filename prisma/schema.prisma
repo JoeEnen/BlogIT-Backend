@@ -14,16 +14,11 @@ model User {
   email          String   @unique
   username       String   @unique
   password       String
-  phone          String?  // Optional
-  bio            String?  // Optional
-  occupation     String?  // Optional
-  status         String?  // Optional
   secondaryEmail String?  @unique
-  profilePhoto   String?  // Optional image path
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  blogs          Blog[]   // One-to-many relationship
+  blogs          Blog[]   
 }
 
 model Blog {
