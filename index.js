@@ -15,6 +15,7 @@ app.use(
       "http://localhost:5173",
       "http://localhost:5174",
       "https://blog-it-neon.vercel.app",
+      "https://blog-it-git-main-josephs-projects-bd661498.vercel.app",
     ],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
