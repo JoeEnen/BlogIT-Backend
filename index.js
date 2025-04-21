@@ -9,7 +9,6 @@ require("dotenv").config();
 
 const app = express();
 
-
 app.use(
   cors({
     origin: [
@@ -36,7 +35,7 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`),
 });
 const upload = multer({ storage });
- 
+
 function authenticateToken(req, res, next) {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
@@ -48,12 +47,12 @@ function authenticateToken(req, res, next) {
     next();
   });
 }
- 
+
 let prisma;
 (async () => {
   const { PrismaClient } = await import("@prisma/client");
   prisma = new PrismaClient();
- 
+
   app.post("/api/signup", async (req, res) => {
     const { firstName, lastName, email, username, password } = req.body;
     try {
@@ -74,7 +73,7 @@ let prisma;
       res.status(500).json({ message: "Internal server error" });
     }
   });
- 
+
   app.post("/api/login", async (req, res) => {
     const { identifier, password } = req.body;
     try {
@@ -119,9 +118,15 @@ let prisma;
     }
   });
  
-  app.put("/api/profile", authenticateToken, async (req, res) => {
-    const { phone, bio, occupation, status, secondaryEmail } = req.body;
+  app.put("/api/profile", authenticateToken, upload.single("profilePicture"), async (req, res) => {
     try {
+      const { phone, bio, occupation, status, secondaryEmail } = req.body;
+      const updateData = { phone, bio, occupation, status, secondaryEmail };
+
+      if (req.file) {
+        updateData.profilePicture = `/uploads/${req.file.filename}`;
+      }
+
       if (secondaryEmail) {
         const exists = await prisma.user.findFirst({
           where: { secondaryEmail, NOT: { id: req.user.userId } },
@@ -132,7 +137,7 @@ let prisma;
 
       const user = await prisma.user.update({
         where: { id: req.user.userId },
-        data: { phone, bio, occupation, status, secondaryEmail },
+        data: updateData,
       });
 
       res.json({ message: "Profile updated", user });
@@ -184,7 +189,7 @@ let prisma;
       res.status(500).json({ message: "Failed to update password" });
     }
   });
- 
+
   app.post("/api/blogs", upload.single("image"), async (req, res) => {
     try {
       const { title, excerpt, body, authorId } = req.body;
@@ -279,7 +284,7 @@ let prisma;
       res.status(500).json({ message: "Failed to delete blog" });
     }
   });
-
+ 
   const PORT = process.env.PORT || 5000;
   app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
 })();

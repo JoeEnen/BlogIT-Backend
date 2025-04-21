@@ -17,7 +17,7 @@ model User {
   secondaryEmail String?  @unique
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
-
+ profilePicture  String? 
   blogs          Blog[]   
 }
 
@@ -27,6 +27,7 @@ model Blog {
   excerpt     String
   body        String
   imageUrl    String
+  draft      Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   authorId    Int
